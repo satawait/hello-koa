@@ -3,13 +3,79 @@
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const controller = require('./controller');
+const staticFiles = require('./static-files');
+const templating = require('./templating');
 
 const app = new Koa();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+// const Sequelize = require('sequelize');
+// const config = require('./config');
+
+// var sequelize = new Sequelize(config.database, config.username, null, {
+//     host: config.host,
+//     dialect: 'mysql',
+//     pool: {
+//         max: 5,
+//         min: 0,
+//         idle: 30000
+//     }
+// });
+
+// var Pet = sequelize.define('pet', {
+//     id: {
+//         type: Sequelize.STRING(50),
+//         primaryKey: true
+//     },
+//     name: Sequelize.STRING(100),
+//     gender: Sequelize.BOOLEAN,
+//     birth: Sequelize.STRING(10),
+//     createdAt: Sequelize.BIGINT,
+//     updatedAt: Sequelize.BIGINT,
+//     version: Sequelize.BIGINT
+// }, {
+//     timestamps: false
+// });
+
+// var now = Date.now();
+// (async() => {
+//     var dog = await Pet.create({
+//         id: 'd-' + now,
+//         name: 'Mary',
+//         gender: false,
+//         birth: '2008-08-08',
+//         createdAt: now,
+//         updatedAt: now,
+//         version: 0
+//     });
+//     console.log('created: ' + JSON.stringify(dog));
+// })();
+
+// (async() => {
+//     var pets = await Pet.findAll();
+//     console.log(`find ${pets.length} pets:`);
+//     pets.forEach(async(p) => {
+//         p.gender = true;
+//         p.updatedAt = Date.now();
+//         p.version++;
+//         await p.save();
+//     })
+// })();
+
 app.use(async(ctx, next) => {
     console.log(`${ctx.request.method} ${ctx.request.url}`);
+    var startTime = new Date().getTime(),
+        execTime;
     await next();
+    execTime = new Date().getTime() - startTime;
+    ctx.response.set('X-Response-Time', `${execTime}ms`);
 });
+
+if (!isProduction) {
+    console.log(isProduction);
+    app.use(staticFiles('/static/', __dirname + '/static'));
+}
 
 // app.use(async(ctx, next) => {
 //     const start = new Date().getTime();
@@ -30,7 +96,13 @@ app.use(async(ctx, next) => {
 //     ctx.response.body = `<h1>hello ${name}</h1>`;
 // });
 
+
 app.use(bodyParser());
+
+app.use(templating('views', {
+    noCache: !isProduction,
+    watch: !isProduction
+}));
 
 // router.get('/', async(ctx, next) => {
 //     ctx.response.type = 'text/html';

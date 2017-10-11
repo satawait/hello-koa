@@ -32,7 +32,14 @@ var fn_signin = async(ctx, next) => {
     var
         email = ctx.request.body.email || '',
         password = ctx.request.body.password || '';
-    if (email === 'admin@example.com' && password === '123456') {
+    const model = require('../model');
+    var pets = await model.User.findAll({
+        where: {
+            email: email,
+            password: password
+        }
+    });
+    if (pets.length > 0) {
         // 登录成功:
         ctx.render('signin-ok.html', {
             title: 'Sign In OK',

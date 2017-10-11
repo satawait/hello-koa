@@ -9,7 +9,8 @@
 var fn_hello = async(ctx, next) => {
     var name = ctx.params.name;
     ctx.render('hello.html', {
-        title: `welcome ${name}`
+        title: `welcome ${name}`,
+        name: name
     });
 };
 
