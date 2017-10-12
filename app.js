@@ -129,6 +129,6 @@ app.use(templating('views', {
 
 
 app.use(controller());
-
-app.listen(3000);
-console.log('app start!');
+module.exports = app;
+// app.listen(3000);
+// console.log('app start!');
