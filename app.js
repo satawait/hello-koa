@@ -1,12 +1,17 @@
 'use strict';
 
 const Koa = require('koa');
+// const webSocket = require('ws');
 const bodyParser = require('koa-bodyparser');
 const controller = require('./controller');
 const staticFiles = require('./static-files');
 const templating = require('./templating');
+const rest = require('./rest');
+// const util = require('./util');
 
 const app = new Koa();
+
+// const WebSocketServer = webSocket.server;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -104,6 +109,8 @@ app.use(templating('views', {
     watch: !isProduction
 }));
 
+app.use(rest.restify());
+
 // router.get('/', async(ctx, next) => {
 //     ctx.response.type = 'text/html';
 //     ctx.response.body = `<h1>Index</h1>
@@ -129,6 +136,11 @@ app.use(templating('views', {
 
 
 app.use(controller());
-module.exports = app;
-// app.listen(3000);
-// console.log('app start!');
+// app.use(async(ctx, next) => {
+//     ctx.state.user = parseUser(ctx.cookies.get('name') || '');
+//     await next();
+// });
+// module.exports = app;
+let server = app.listen(3000);
+// let wss = new WebSocketServer({ server: server });
+console.log('app start!');

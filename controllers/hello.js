@@ -15,5 +15,5 @@ var fn_hello = async(ctx, next) => {
 };
 
 module.exports = {
-    'GET /:name': fn_hello
+    'GET /hello': fn_hello
 };

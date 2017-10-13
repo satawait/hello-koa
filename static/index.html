@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 引用jQuery -->
+    <script src="js/jquery.min.js"></script>
+    <!-- 引用Vue -->
+    <script src="js/vue.min.js"></script>
+    <script>
+        $(() => {
+            let vm = new Vue({
+                el: '#vm',
+                data: {
+                    name: 'jessey',
+                    age: 18,
+                    language: ['en'],
+                    subscribe: true,
+                    city: 'sh',
+                    todos: [{
+                        name: '产品评审',
+                        description: '新款iPhone上市前评审'
+                    }, {
+                        name: '开发计划',
+                        description: '与PM确定下一版Android开发计划'
+                    }, {
+                        name: 'VC会议',
+                        description: '敲定C轮5000万美元融资'
+                    }]
+                },
+                methods: {
+                    register: () => {
+                        console.log(this);
+                        alert(JSON.stringify(this.vm.$data));
+                    }
+                }
+            });
+            window.vm = vm;
+        });
+    </script>
+
+</head>
+
+<body>
+    <form id="vm" v-on:submit.prevent="register">
+        <p><input v-model="name"></p>
+        <p><input v-model="age"></p>
+        <p>
+            <label><input type="checkbox" v-model="language" value="zh"> Chinese</label>
+            <label><input type="checkbox" v-model="language" value="en"> English</label>
+            <label><input type="checkbox" v-model="language" value="fr"> French</label>
+        </p>
+        <p>
+            <label><input type="checkbox" v-model="subscribe">hello</label>
+        </p>
+        <p>
+            <select v-model="city">
+                <option value="bj">Beijing</option>
+                <option value="sh">Shanghai</option>
+                <option value="gz">Guangzhou</option>
+            </select>
+        </p>
+        <p>
+            <ol>
+                <li v-for="t in todos">
+                    <dl>
+                        <dt>{{ t.name }}</dt>
+                        <dd>{{ t.description }}</dd>
+                    </dl>
+                </li>
+            </ol>
+        </p>
+        <p><input type="submit" value="OK"></p>
+    </form>
+</body>
+
+</html>
